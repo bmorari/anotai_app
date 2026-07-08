@@ -33,108 +33,113 @@ class _TodoListPageState extends State<TodoListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFF8FAFC),
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: todoController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Adicione uma tarefa',
-                          labelStyle: TextStyle(color: Colors.grey[700]),
-                          floatingLabelStyle: TextStyle(color: Colors.indigo),
-                          errorText: errorText,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey[700]!,
-                              width: 2,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.indigo,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        String text = todoController.text;
-
-                        if(text.isEmpty) {
-                          setState(() {
-                            errorText = 'O texto não pode ser vazio!';
-                          });
-                          return;
-                        }
-
-                        setState(() {
-                          Todo newTodo = Todo(
-                            title: text,
-                            dateTime: DateTime.now(),
-                          );
-                          todos.add(newTodo);
-                          errorText = null;
-                        });
-                        todoController.clear();
-                        todoRepository.saveTodoList(todos);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        backgroundColor: Colors.indigo,
-                        padding: EdgeInsets.all(12.7),
-                      ),
-                      child: Icon(Icons.add, size: 27, color: Colors.white),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                Flexible(
-                  child: ListView(
-                    shrinkWrap: true,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        backgroundColor: Color(0xFFF8FAFC),
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
                     children: [
-                      for (Todo todo in todos)
-                        TodoListItem(todo: todo, onDelete: onDelete),
+                      Expanded(
+                        child: TextField(
+                          controller: todoController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Adicione uma tarefa',
+                            labelStyle: TextStyle(color: Colors.grey[500]),
+                            floatingLabelStyle: TextStyle(color: Colors.indigo),
+                            errorText: errorText,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey[600]!,
+                                width: 2,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.indigo,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          String text = todoController.text;
+      
+                          if(text.isEmpty) {
+                            setState(() {
+                              errorText = 'O texto não pode ser vazio!';
+                            });
+                            return;
+                          }
+      
+                          setState(() {
+                            Todo newTodo = Todo(
+                              title: text,
+                              dateTime: DateTime.now(),
+                            );
+                            todos.add(newTodo);
+                            errorText = null;
+                          });
+                          todoController.clear();
+                          todoRepository.saveTodoList(todos);
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          backgroundColor: Colors.indigo,
+                          padding: EdgeInsets.all(12.7),
+                        ),
+                        child: Icon(Icons.add, size: 27, color: Colors.white),
+                      ),
                     ],
                   ),
-                ),
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        ' ${todos.length} tarefas pendentes',
-                        style: TextStyle(fontSize: 13, color: Colors.grey[700]),
-                      ),
+                  SizedBox(height: 16),
+                  Flexible(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        for (Todo todo in todos)
+                          TodoListItem(todo: todo, onDelete: onDelete),
+                      ],
                     ),
-                    ElevatedButton(
-                      onPressed: showAlertDeleteAllTodos,
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                  ),
+                  SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          ' ${todos.length} tarefas pendentes',
+                          style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                         ),
-                        backgroundColor: const Color.fromARGB(255, 241, 126, 126),
-                        padding: EdgeInsets.all(14),
                       ),
-                      child: Text('Limpar tudo', style: TextStyle(fontSize: 13, color: Colors.white)),
-                    ),
-                  ],
-                ),
-              ],
+                      ElevatedButton(
+                        onPressed: showAlertDeleteAllTodos,
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          backgroundColor: const Color.fromARGB(255, 241, 126, 126),
+                          padding: EdgeInsets.all(14),
+                        ),
+                        child: Text('Limpar tudo', style: TextStyle(fontSize: 13, color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
