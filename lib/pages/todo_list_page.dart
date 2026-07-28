@@ -115,13 +115,30 @@ class _TodoListPageState extends State<TodoListPage> {
                   ),
                   SizedBox(height: 16),
                   Flexible(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        for (Todo todo in todos)
-                          TodoListItem(todo: todo, onDelete: onDelete),
-                      ],
-                    ),
+                    child: todos.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.assignment,
+                                  size: 45,
+                                  color: Colors.grey[400],
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Adicione sua primeira tarefa acima.',
+                                  style: TextStyle(fontSize: 14, color: Colors.grey[600], fontStyle: FontStyle.italic),
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView(
+                            children: [
+                              for (Todo todo in todos)
+                                TodoListItem(todo: todo, onDelete: onDelete),
+                            ],
+                          ),
                   ),
                   SizedBox(height: 16),
                   Row(
@@ -156,6 +173,7 @@ class _TodoListPageState extends State<TodoListPage> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 90),
                 ],
               ),
             ),
