@@ -18,6 +18,7 @@ class _TodoListPageState extends State<TodoListPage> {
   final timeNow = DateTime.now();
   List<Todo> todos = [];
   Todo? deletedTodo;
+  Todo? completedTodo;
   int? deletedTodoPos;
   String? errorText;
 
@@ -136,7 +137,7 @@ class _TodoListPageState extends State<TodoListPage> {
                         : ListView(
                             children: [
                               for (Todo todo in todos)
-                                TodoListItem(todo: todo, onDelete: onDelete),
+                                TodoListItem(todo: todo, onDelete: onDelete, onComplete: onComplete),
                             ],
                           ),
                   ),
@@ -214,6 +215,13 @@ class _TodoListPageState extends State<TodoListPage> {
         ),
       ),
     );
+  }
+
+  void onComplete(Todo todo) {
+    setState(() {
+      todo.completed = true;
+    });
+    todoRepository.saveTodoList(todos);
   }
 
   void showAlertDeleteAllTodos() {
